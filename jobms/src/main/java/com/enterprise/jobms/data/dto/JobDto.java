@@ -15,5 +15,5 @@ public class JobDto {
     private String minSalary;
     private String maxSalary;
     private String location;
-    private Long companyId;
+    private CompanyDto companyDto;
 }
