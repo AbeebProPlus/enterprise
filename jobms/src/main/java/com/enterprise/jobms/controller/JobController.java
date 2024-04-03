@@ -1,5 +1,6 @@
 package com.enterprise.jobms.controller;
 
+import com.enterprise.jobms.data.dto.JobDto;
 import com.enterprise.jobms.data.model.Job;
 import com.enterprise.jobms.service.JobService;
 import lombok.RequiredArgsConstructor;
@@ -19,7 +20,7 @@ public class JobController {
     }
 
     @GetMapping("/")
-    public ResponseEntity<List<Job>> findAll(){
+    public ResponseEntity<List<JobDto>> findAll(){
         return ResponseEntity.ok(jobService.findAll());
     }
 
@@ -30,10 +31,10 @@ public class JobController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Job> getJobById(@PathVariable Long id){
-        Job job = jobService.getJobById(id);
-        if(job != null)
-            return new ResponseEntity<>(job, HttpStatus.OK);
+    public ResponseEntity<JobDto> getJobById(@PathVariable Long id){
+        JobDto jobDto = jobService.getJobById(id);
+        if(jobDto != null)
+            return new ResponseEntity<>(jobDto, HttpStatus.OK);
         return new ResponseEntity<>(HttpStatus.NOT_FOUND);
     }
 

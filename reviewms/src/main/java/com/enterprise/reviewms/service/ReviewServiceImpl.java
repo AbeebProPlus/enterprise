@@ -1,24 +1,25 @@
 package com.enterprise.reviewms.service;
 
 
+import com.enterprise.reviewms.data.dto.ReviewDto;
 import com.enterprise.reviewms.data.model.Review;
 import com.enterprise.reviewms.repo.ReviewRepository;
+import lombok.RequiredArgsConstructor;
+import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 
 @Service
+@RequiredArgsConstructor
 public class ReviewServiceImpl implements ReviewService {
     private final ReviewRepository reviewRepository;
-
-    public ReviewServiceImpl(ReviewRepository reviewRepository) {
-        this.reviewRepository = reviewRepository;
-    }
+    private final ModelMapper modelMapper;
 
     @Override
-    public List<Review> getAllReviews(Long companyId) {
+    public List<ReviewDto> getAllReviews(Long companyId) {
         List<Review> reviews = reviewRepository.findByCompanyId(companyId);
-        return reviews;
+        return reviews.stream().map(review -> modelMapper.map(review, ReviewDto.class)).toList();
     }
 
     @Override
@@ -33,8 +34,13 @@ public class ReviewServiceImpl implements ReviewService {
     }
 
     @Override
-    public Review getReview(Long reviewId) {
-        return reviewRepository.findById(reviewId).orElse(null);
+    public ReviewDto getReview(Long reviewId) {
+        Review review = reviewRepository.findById(reviewId).orElse(null);
+        if (review != null){
+            return modelMapper.map(review, ReviewDto.class);
+        } else {
+            return null;
+        }
     }
 
     @Override

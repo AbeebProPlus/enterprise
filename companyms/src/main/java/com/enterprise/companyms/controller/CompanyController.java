@@ -1,5 +1,6 @@
 package com.enterprise.companyms.controller;
 
+import com.enterprise.companyms.data.dto.CompanyDto;
 import com.enterprise.companyms.data.models.Company;
 import com.enterprise.companyms.service.CompanyService;
 import org.springframework.http.HttpStatus;
@@ -51,8 +52,8 @@ public class CompanyController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Company> getCompany(@PathVariable Long id){
-        Company company = companyService.getCompanyById(id);
+    public ResponseEntity<CompanyDto> getCompany(@PathVariable Long id){
+        CompanyDto company = companyService.getCompanyById(id);
         if (company != null){
             return new ResponseEntity<>(company, HttpStatus.OK);
         } else {

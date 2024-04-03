@@ -1,5 +1,6 @@
 package com.enterprise.companyms.service;
 
+import com.enterprise.companyms.data.dto.CompanyDto;
 import com.enterprise.companyms.data.dto.ReviewMessage;
 import com.enterprise.companyms.data.models.Company;
 
@@ -10,6 +11,6 @@ public interface CompanyService {
     boolean updateCompany(Company company, Long id);
     void createCompany(Company company);
     boolean deleteCompanyById(Long id);
-    Company getCompanyById(Long id);
+    CompanyDto getCompanyById(Long id);
     void updateCompanyRating(ReviewMessage reviewMessage);
 }

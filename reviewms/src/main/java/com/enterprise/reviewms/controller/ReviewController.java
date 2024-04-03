@@ -1,5 +1,6 @@
 package com.enterprise.reviewms.controller;
 
+import com.enterprise.reviewms.data.dto.ReviewDto;
 import com.enterprise.reviewms.data.model.Review;
 import com.enterprise.reviewms.service.ReviewService;
 import org.springframework.http.HttpStatus;
@@ -18,7 +19,7 @@ public class ReviewController {
     }
 
     @GetMapping
-    public ResponseEntity<List<Review>> getAllReviews(@RequestParam Long companyId){
+    public ResponseEntity<List<ReviewDto>> getAllReviews(@RequestParam Long companyId){
         return new ResponseEntity<>(reviewService.getAllReviews(companyId),
                 HttpStatus.OK);
     }
@@ -36,7 +37,7 @@ public class ReviewController {
     }
 
     @GetMapping("/{reviewId}")
-    public ResponseEntity<Review> getReview(@PathVariable Long reviewId){
+    public ResponseEntity<ReviewDto> getReview(@PathVariable Long reviewId){
         return new ResponseEntity<>(reviewService.getReview(reviewId),
                 HttpStatus.OK);
 

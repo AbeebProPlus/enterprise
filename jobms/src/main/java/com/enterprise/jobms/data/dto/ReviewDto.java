@@ -5,18 +5,13 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import java.util.List;
-
-@Setter
 @Getter
-@AllArgsConstructor
+@Setter
 @NoArgsConstructor
-public class JobDto {
+@AllArgsConstructor
+public class ReviewDto {
+    private Long id;
     private String title;
     private String description;
-    private String minSalary;
-    private String maxSalary;
-    private String location;
-    private CompanyDto companies;
-    private List<ReviewDto> reviews;
+    private double rating;
 }

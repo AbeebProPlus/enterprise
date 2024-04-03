@@ -1,21 +1,21 @@
 package com.enterprise.companyms.service;
 
+import com.enterprise.companyms.data.dto.CompanyDto;
 import com.enterprise.companyms.data.dto.ReviewMessage;
 import com.enterprise.companyms.data.models.Company;
 import com.enterprise.companyms.repo.CompanyRepository;
+import lombok.RequiredArgsConstructor;
+import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
 
 @Service
+@RequiredArgsConstructor
 public class CompanyServiceImpl implements CompanyService {
-    private CompanyRepository companyRepository;
-
-    public CompanyServiceImpl(CompanyRepository companyRepository) {
-        this.companyRepository = companyRepository;
-    }
-
+    private final CompanyRepository companyRepository;
+    private final ModelMapper modelMapper;
     @Override
     public List<Company> getAllCompanies() {
         return companyRepository.findAll();
@@ -51,8 +51,13 @@ public class CompanyServiceImpl implements CompanyService {
     }
 
     @Override
-    public Company getCompanyById(Long id) {
-        return companyRepository.findById(id).orElse(null);
+    public CompanyDto getCompanyById(Long id) {
+        Optional<Company> companyOptional = companyRepository.findById(id);
+        if (companyOptional.isPresent()) {
+            Company company = companyOptional.get();
+            return modelMapper.map(company, CompanyDto.class);
+        }
+        return null;
     }
 
     @Override
