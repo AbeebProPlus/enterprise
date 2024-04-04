@@ -17,6 +17,6 @@ public class JobDto {
     private String minSalary;
     private String maxSalary;
     private String location;
-    private CompanyDto companies;
+    private CompanyDto company;
     private List<ReviewDto> reviews;
 }

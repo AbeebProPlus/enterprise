@@ -1,6 +1,8 @@
 package com.enterprise.jobms.service;
 
 
+import com.enterprise.jobms.clients.CompanyClient;
+import com.enterprise.jobms.clients.ReviewClient;
 import com.enterprise.jobms.data.dto.JobDto;
 import com.enterprise.jobms.data.model.Job;
 import com.enterprise.jobms.repo.JobRepository;
@@ -17,6 +19,8 @@ import java.util.Optional;
 public class JobServiceImpl implements JobService {
     private final JobRepository jobRepository;
     private final ModelMapper modelMapper;
+    private final CompanyClient companyClient;
+    private final ReviewClient reviewClient;
 
 
     public List<JobDto> findAll() {
@@ -33,7 +37,14 @@ public class JobServiceImpl implements JobService {
     @Override
     public JobDto getJobById(Long id) {
         Optional<Job> jobOptional = jobRepository.findById(id);
-        return jobOptional.map(job -> modelMapper.map(job, JobDto.class)).orElse(null);
+        if (jobOptional.isPresent()) {
+            Job job = jobOptional.get();
+            JobDto jobDto = modelMapper.map(job, JobDto.class);
+            jobDto.setCompany(companyClient.getCompany(job.getCompanyId()).getBody());
+            jobDto.setReviews(reviewClient.getAllReviews(job.getId()).getBody());
+            return jobDto;
+        }
+        return null;
     }
 
     @Override
