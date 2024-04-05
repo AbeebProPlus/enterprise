@@ -3,7 +3,9 @@ package com.enterprise.jobms.service;
 
 import com.enterprise.jobms.clients.CompanyClient;
 import com.enterprise.jobms.clients.ReviewClient;
+import com.enterprise.jobms.data.dto.CompanyDto;
 import com.enterprise.jobms.data.dto.JobDto;
+import com.enterprise.jobms.data.dto.ReviewDto;
 import com.enterprise.jobms.data.model.Job;
 import com.enterprise.jobms.repo.JobRepository;
 
@@ -40,8 +42,10 @@ public class JobServiceImpl implements JobService {
         if (jobOptional.isPresent()) {
             Job job = jobOptional.get();
             JobDto jobDto = modelMapper.map(job, JobDto.class);
-            jobDto.setCompany(companyClient.getCompany(job.getCompanyId()).getBody());
-            jobDto.setReviews(reviewClient.getAllReviews(job.getId()).getBody());
+            CompanyDto companyDto = companyClient.getCompany(job.getCompanyId()).getBody();
+            jobDto.setCompany(companyDto);
+            List<ReviewDto> reviewDtos = reviewClient.getAllReviews(job.getId()).getBody();
+            jobDto.setReviews(reviewDtos);
             return jobDto;
         }
         return null;
