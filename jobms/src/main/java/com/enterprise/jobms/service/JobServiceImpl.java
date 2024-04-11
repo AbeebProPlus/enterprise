@@ -39,6 +39,7 @@ public class JobServiceImpl implements JobService {
     @Override
     public JobDto getJobById(Long id) {
         Optional<Job> jobOptional = jobRepository.findById(id);
+        System.out.print("Get job by id");
         if (jobOptional.isPresent()) {
             Job job = jobOptional.get();
             JobDto jobDto = modelMapper.map(job, JobDto.class);
