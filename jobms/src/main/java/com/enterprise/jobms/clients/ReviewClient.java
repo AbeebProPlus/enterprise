@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import java.util.List;
 
-@FeignClient(name = "review-service", path = "/reviews")
+@FeignClient(name = "REVIEW-SERVICE", path = "/reviews")
 public interface ReviewClient {
     @GetMapping
     ResponseEntity<List<ReviewDto>> getAllReviews(@RequestParam Long companyId);

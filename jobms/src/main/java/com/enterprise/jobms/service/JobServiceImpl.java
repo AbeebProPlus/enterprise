@@ -9,10 +9,14 @@ import com.enterprise.jobms.data.dto.ReviewDto;
 import com.enterprise.jobms.data.model.Job;
 import com.enterprise.jobms.repo.JobRepository;
 
+import io.github.resilience4j.circuitbreaker.annotation.CircuitBreaker;
+import io.github.resilience4j.ratelimiter.annotation.RateLimiter;
+import io.github.resilience4j.retry.annotation.Retry;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -23,6 +27,7 @@ public class JobServiceImpl implements JobService {
     private final ModelMapper modelMapper;
     private final CompanyClient companyClient;
     private final ReviewClient reviewClient;
+    int attempt = 0;
 
 
     public List<JobDto> findAll() {
@@ -37,7 +42,14 @@ public class JobServiceImpl implements JobService {
     }
 
     @Override
+//    @CircuitBreaker(name = "companyBreaker",
+//            fallbackMethod="companyBreakerFallback")
+//    @Retry(name = "companyBreaker",
+//            fallbackMethod="companyBreakerFallback")
+
+    @RateLimiter(name = "companyBreaker", fallbackMethod = "companyBreakerFallback")
     public JobDto getJobById(Long id) {
+//        System.out.println("attempt: " + ++attempt);
         Optional<Job> jobOptional = jobRepository.findById(id);
         System.out.print("Get job by id");
         if (jobOptional.isPresent()) {
@@ -50,6 +62,11 @@ public class JobServiceImpl implements JobService {
             return jobDto;
         }
         return null;
+    }
+    public JobDto companyBreakerFallback(Exception e){
+        JobDto jobDto = new JobDto();
+        jobDto.setTitle("Dummy");
+        return jobDto;
     }
 
     @Override
