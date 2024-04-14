@@ -3,6 +3,7 @@ package com.enterprise.reviewms.service;
 
 import com.enterprise.reviewms.data.dto.ReviewDto;
 import com.enterprise.reviewms.data.model.Review;
+import com.enterprise.reviewms.messaging.ReviewMessageProducer;
 import com.enterprise.reviewms.repo.ReviewRepository;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
@@ -15,6 +16,8 @@ import java.util.List;
 public class ReviewServiceImpl implements ReviewService {
     private final ReviewRepository reviewRepository;
     private final ModelMapper modelMapper;
+
+
 
     @Override
     public List<ReviewDto> getAllReviews(Long companyId) {
@@ -67,5 +70,11 @@ public class ReviewServiceImpl implements ReviewService {
         } else {
             return false;
         }
+    }
+
+    @Override
+    public double averageRating(Long companyId) {
+        List<Review> reviews = reviewRepository.findByCompanyId(companyId);
+        return reviews.stream().mapToDouble(Review::getRating).average().orElse(0.0);
     }
 }

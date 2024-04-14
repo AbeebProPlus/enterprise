@@ -3,7 +3,9 @@ package com.enterprise.companyms.messaging;
 import com.enterprise.companyms.data.dto.ReviewMessage;
 import com.enterprise.companyms.service.CompanyService;
 import org.springframework.amqp.rabbit.annotation.RabbitListener;
+import org.springframework.stereotype.Service;
 
+@Service
 public class ReviewMessageConsumer {
     private final CompanyService companyService;
 

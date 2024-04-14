@@ -3,6 +3,7 @@ package com.enterprise.companyms.service;
 import com.enterprise.companyms.data.dto.CompanyDto;
 import com.enterprise.companyms.data.dto.ReviewMessage;
 import com.enterprise.companyms.data.models.Company;
+import com.enterprise.companyms.feignClients.ReviewClient;
 import com.enterprise.companyms.repo.CompanyRepository;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
@@ -16,6 +17,7 @@ import java.util.Optional;
 public class CompanyServiceImpl implements CompanyService {
     private final CompanyRepository companyRepository;
     private final ModelMapper modelMapper;
+    private final ReviewClient reviewClient;
     @Override
     public List<Company> getAllCompanies() {
         return companyRepository.findAll();
@@ -62,7 +64,14 @@ public class CompanyServiceImpl implements CompanyService {
 
     @Override
     public void updateCompanyRating(ReviewMessage reviewMessage) {
-
+        System.out.println(
+                reviewMessage.getRating() + " " + reviewMessage.getDescription()+ " " + reviewMessage.getCompanyId()
+        );
+        Company company = companyRepository.findById(reviewMessage.getCompanyId())
+                .orElseThrow(() -> new RuntimeException("Company not found"));
+           double averageRating = reviewClient.averageRating(reviewMessage.getCompanyId());
+            company.setRating(averageRating);
+            companyRepository.save(company);
     }
 
 }
