@@ -42,8 +42,86 @@ services:
       - 15672:15672
     networks:
       - postgres
-
+  config-server:
+    image: mac8ver1/config-server:latest
+    container_name: config-server
+    ports:
+      - 8080:8080
+    depends_on:
+      - registry
+    networks:
+      - microservice-network
+      - postgres
+    environment:
+      - SPRING_PROFILES_ACTIVE=docker
+  registry:
+    image: mac8ver1/registry:latest
+    container_name: registry
+    depends_on:
+      - rabbitmq
+      - zipkin
+      - postgres
+      - pgadmin
+    ports:
+      - 8761:8761
+    networks:
+      - microservice-network
+      - postgres
+  companyms:
+    image: mac8ver1/companyms:latest
+    container_name: company
+    depends_on:
+      - config-server
+      - registry
+    ports:
+      - 8083:8083
+    networks:
+      - microservice-network
+      - postgres
+    environment:
+      - SPRING_PROFILES_ACTIVE=docker
+  jobms:
+    image: mac8ver1/jobms:latest
+    container_name: job
+    depends_on:
+      - config-server
+      - registry
+    ports:
+      - 8082:8082
+    networks:
+      - microservice-network
+      - postgres
+    environment:
+      - SPRING_PROFILES_ACTIVE=docker
+      - EUREKA_CLIENT_SERVICEURL_DEFAULTZONE=http://registry:8761/eureka
+  reviewms:
+    image: mac8ver1/reviewms:latest
+    container_name: review
+    depends_on:
+      - config-server
+      - registry
+    ports:
+      - 8081:8081
+    networks:
+      - microservice-network
+      - postgres
+    environment:
+      - SPRING_PROFILES_ACTIVE=docker
+  gateway:
+    image: mac8ver1/gateway:latest
+    container_name: gateway
+    depends_on:
+      - registry
+    ports:
+      - 8084:8084
+    networks:
+      - microservice-network
+      - postgres
+    environment:
+      - SPRING_PROFILES_ACTIVE=docker
 networks:
+  microservice-network:
+    driver: bridge
   postgres:
     driver: bridge
 
